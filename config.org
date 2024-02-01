@@ -7,8 +7,9 @@
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
   - [[#elpaca---package-manager][Elpaca - Package Manager]]
   - [[#elpaca-use-package-support][Elpaca use-package support]]
-  - [[#evil-mode][Evil Mode]]
-  - [[#generalel-keybindings][General.el Keybindings]]
+  - [[#meow-mode][Meow Mode]]
+- [[#keybinds][Keybinds]]
+  - [[#info][Info]]
 - [[#looks][LOOKS]]
   - [[#theme][Theme]]
   - [[#fonts][Fonts]]
@@ -100,103 +101,113 @@
   ;;(use-package general :demand t)
   ;;(elpaca-wait)
   #+end_src
-
-** Evil Mode
-*** evil
+  
+** Meow Mode
+*** Qwerty Layout
 #+begin_src emacs-lisp
-  ;; Expands to: (elpaca evil (use-package evil :demand t))
-  (use-package evil
-    :init
-    ;;(setq evil-want-integration t) ;; this is optional, evil-collection is t
-    (setq evil-want-keybinding nil) ;; needs to be set after evil loads
-    (setq evil-vsplit-window-right t)
-    (setq evil-split-window-below t)
-    :config
-    (evil-mode 1)
-    (with-eval-after-load 'evil 
-        ;; (setq evil-want-keybinding t)
-        (with-eval-after-load 'elpaca-ui (evil-make-intercept-map elpaca-ui-mode-map))
-        (with-eval-after-load 'elpaca-info (evil-make-intercept-map elpaca-info-mode-map))))
- #+end_src
-*** evil-collection
-#+begin_src emacs-lisp
-  (use-package evil-collection
-    :after evil
-    :ensure t
-    :config
-    ;; NOTE: If you don’t like surprises but still want to use evil-collection-init, setting
-    ;; evil-collection-mode-list to nil and adding each mode manually might be a better option. 
-    (setq evil-collection-mode-list '(dashboard dired ibuffer))
-    (evil-collection-init)
-    (with-eval-after-load 'evil-collection
-        (with-eval-after-load 'org (evil-collection-org-setup))
-        (with-eval-after-load 'info (evil-collection-info-setup))))
- #+end_src
-
- #+begin_src emacs-lisp
-  ;;Turns off elpaca-use-package-mode current declaration
-  ;;Note this will cause the declaration to be interpreted immediately (not deferred).
-  ;;Useful for configuring built-in emacs features.
-  (use-package emacs :elpaca nil :config (setq ring-bell-function #'ignore))
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
 #+end_src
 
-** General.el Keybindings
-
+*** meow
 #+begin_src emacs-lisp
-  (use-package general
+  (use-package meow
     :config
-    (general-evil-setup)
-    ;; set 'SPC' as the global leader key
-    (general-create-definer jah/leader-keys
-      :states '(normal insert visual emacs)
-      :keymaps 'override
-      :prefix "SPC" ;; sets leader
-      :global-prefix "M-SPC")
+    (meow-setup)
+    (meow-global-mode 1))
+#+end_src
 
-    (jah/leader-keys
-      "x" '(execute-extended-command :wk "M-x: Execute Extended Command"))
-
-    (jah/leader-keys
-      "." '(find-file :wk "Find file")
-      "f" '(:ignore :wk "File Commands")
-      "f c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
-      "f C" '(jah/reload-init-file :wk "Reload emacs config")
-      "TAB TAB" '(comment-line :wk "Comment lines"))
-
-    (jah/leader-keys
-      "b" '(:ignore t :wk "buffer")
-      "b i" '(ibuffer :wk "Ibuffer")
-      "b b" '(switch-to-buffer :wk "Switch buffer")
-      "b k" '(kill-this-buffer :wk "Kill this buffer")
-      "b n" '(next-buffer :wk "Goto next buffer")
-      "b p" '(previous-buffer :wk "Goto previous buffer")
-      "b r" '(revert-buffer :wk "Revert buffer")
-      "b l" '(list-buffers :wk "Open buffer list"))
-
-    (jah/leader-keys
-      "e" '(:ignore t :wk "Eval")
-      "e b" '(eval-buffer :wk "Eval current buffer")
-      "e d" '(eval-defun :wk "Eval defun at or after point")
-      "e l" '(eval-last-sexp :wk "Eval expression before point")
-      "e e" '(eval-expression :wk "Eval expression input")
-      "e r" '(eval-region :wk "Eval active region"))
-
-    (jah/leader-keys
-      "h" '(:ignore :wk "Help")
-      "h f" '(describe-function :wk "Describe function")
-      "h v" '(describe-variable :wk "Describe variable")
-      "h o" '(describe-symbol :wk "Describe function or variable")
-      "h k" '(describe-key :wk "Describe keybinding as input")
-      "h w" '(where-is :wk "Describe keybindings for input")
-      "h m" '(describe-mode :wk "Describe current major/minor modes")
-      "h i" '(info :wk "Enter Info, the documentation browser"))
-
-      (jah/leader-keys
-        "t" '(:ignore t :wk "Toggle")
-        "t l" '(display-line-numbers-mode t :wk "Toggle line numbers")
-        "t t" '(visual-line-mode t :wk "Toggle truncated lines"))
-    )
-    (elpaca-wait)
+* Keybinds
+** Info
+#+begin_src emacs-lisp
+(add-hook 'Info-mode-hook
+  (lambda ()
+    (local-set-key "z" #'Info-scroll-up)
+    (setq Info-isearch-search 1)
+))
 
 #+end_src
 
