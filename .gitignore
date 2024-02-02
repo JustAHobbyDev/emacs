@@ -16,3 +16,5 @@ tree-sitter
 .tutor
 url
 projects
+multisession/
+transient/

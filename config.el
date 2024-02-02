@@ -154,6 +154,8 @@
     (setq Info-isearch-search 1)
 ))
 
+(setq help-window-select t)
+
 ;; modus-vivendi theme customizations
 (setq modus-themes-mode-line
       '(borderless
@@ -206,8 +208,32 @@
 (setq display-line-numbers 'relative)
 (global-visual-line-mode t)
 
+(global-hl-line-mode)
+
 ;; Turn off line number
 (line-number-mode -1)
+
+(use-package helpful
+  :init
+  ;; If you want to replace the default Emacs /help/ keybindings:
+  ;; Note that the built-in `describe-function' includes both functions
+  ;; and macros. `helpful-function' is functions only, so we provide
+  ;; `helpful-callable' as a drop-in replacement.
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-h x") #'helpful-command)
+
+  ;; Recommended keybindings to get the most out of *helpful*:
+  ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+  ;; for this in lisp modes.
+  (global-set-key (kbd "C-c d") #'helpful-at-point)
+
+  ;; Look up *F*unctions (excludes macros).
+  ;;
+  ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+  ;; already links to the manual, if a function is referenced there.
+  (global-set-key (kbd "C-h F") #'helpful-function))
 
 (use-package toc-org
   :commands toc-org-enable
@@ -259,13 +285,13 @@
   :init
   (vertico-prescient-mode))
 
-(use-package sudo-edit
-  :after general
-  :config
-    (jah/leader-keys
-      "f u" '(sudo-edit-find-file :wk "Sudo find file")
-      "f U" '(sudo-edit :wk "Sudo edit file"))
-)
+;;
+;;  :after general
+;;  :config
+;;    (jah/leader-keys
+;;      "f u" '(sudo-edit-find-file :wk "Sudo find file")
+;;      "f U" '(sudo-edit :wk "Sudo edit file"))
+;;)
 
 (use-package which-key
   :init

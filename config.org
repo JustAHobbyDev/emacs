@@ -10,14 +10,20 @@
   - [[#meow-mode][Meow Mode]]
 - [[#keybinds][Keybinds]]
   - [[#info][Info]]
+- [[#windows][Windows]]
+  - [[#help][Help]]
 - [[#looks][LOOKS]]
   - [[#theme][Theme]]
   - [[#fonts][Fonts]]
   - [[#icons][Icons]]
 - [[#gui-tweaks][GUI Tweaks]]
+  - [[#pixel-scrolling][Pixel Scrolling]]
   - [[#disable-menu-bar-tool-bar-and-scroll-bars][Disable menu bar, tool bar, and scroll bars]]
   - [[#display-line-numbers-and-truncated-lines][Display Line Numbers and Truncated Lines]]
+  - [[#highlight-line-at-point][Highlight line at point]]
   - [[#mode-line][Mode Line]]
+- [[#help--info][Help & Info]]
+  - [[#use-helpful][Use Helpful]]
 - [[#org-mode][ORG MODE]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
@@ -211,6 +217,14 @@
 
 #+end_src
 
+* Windows
+** Help
+*Help* window is automatically selected when it is displayed.
+#+begin_src emacs-lisp
+(setq help-window-select t)
+#+end_src
+
+*winner-mode*: See Info: `C-h i g' (emacs)Window Convenience
 * LOOKS
 
 ** Theme
@@ -279,6 +293,19 @@
 
 
 * GUI Tweaks
+** Pixel Scrolling
+#+begin_src 
+(defun pixel-scroll-setup ()
+  (interactive)
+  (setq pixel-scroll-precision-large-scroll-height 1)
+  (setq pixel-scroll-precision-interpolation-factor 1))
+
+(when (boundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-setup)
+  (add-hook 'prog-mode-hook #'pixel-scroll-precision-mode)
+  (add-hook 'org-mode-hook #'pixel-scroll-precision-mode))
+
+#+end_src
 
 ** Disable menu bar, tool bar, and scroll bars
 #+begin_src emacs-lisp
@@ -294,10 +321,43 @@
   (global-visual-line-mode t)
 #+end_src
 
+** Highlight line at point
+#+begin_src emacs-lisp
+(global-hl-line-mode)
+
+#+end_src
 ** Mode Line
 #+begin_src emacs-lisp
   ;; Turn off line number
   (line-number-mode -1)
+#+end_src
+
+* Help & Info
+** Use Helpful
+*Helpful* is an alternative to the built-in Emacs /help/ that provides much more contextual information.
+#+begin_src emacs-lisp
+  (use-package helpful
+    :init
+    ;; If you want to replace the default Emacs /help/ keybindings:
+    ;; Note that the built-in `describe-function' includes both functions
+    ;; and macros. `helpful-function' is functions only, so we provide
+    ;; `helpful-callable' as a drop-in replacement.
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command)
+
+    ;; Recommended keybindings to get the most out of *helpful*:
+    ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+    ;; for this in lisp modes.
+    (global-set-key (kbd "C-c d") #'helpful-at-point)
+
+    ;; Look up *F*unctions (excludes macros).
+    ;;
+    ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+    ;; already links to the manual, if a function is referenced there.
+    (global-set-key (kbd "C-h F") #'helpful-function))
+
 #+end_src
 
 * ORG MODE
@@ -378,13 +438,13 @@ A few useful configurations for vertico
 * SUDO EDIT
 sudo-edit allows both opening and elevating files with sudo privileges.
 #+begin_src emacs-lisp
-  (use-package sudo-edit
-    :after general
-    :config
-      (jah/leader-keys
-        "f u" '(sudo-edit-find-file :wk "Sudo find file")
-        "f U" '(sudo-edit :wk "Sudo edit file"))
-  )
+  ;;
+  ;;  :after general
+  ;;  :config
+  ;;    (jah/leader-keys
+  ;;      "f u" '(sudo-edit-find-file :wk "Sudo find file")
+  ;;      "f U" '(sudo-edit :wk "Sudo edit file"))
+  ;;)
 #+end_src
 
 * WHICH-KEY
