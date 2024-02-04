@@ -148,6 +148,15 @@
   (meow-setup)
   (meow-global-mode 1))
 
+(use-package no-littering)
+
+(with-eval-after-load 'recentf 
+  (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-var-directory))
+  (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory)))
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+
 (add-hook 'Info-mode-hook
   (lambda ()
     (local-set-key "z" #'Info-scroll-up)
@@ -179,16 +188,16 @@
 (load-theme 'modus-vivendi t)
 
 ;; Set fonts
-(set-face-attribute 'default nil :font "Berkeley Mono" :height 110 :width 'regular)
+(set-face-attribute 'default nil :font "Berkeley Mono" :height 105 :width 'regular)
 (set-face-attribute 'variable-pitch nil :font "Berkeley Mono Variable" :height 120 :width 'regular)
-(set-face-attribute 'fixed-pitch nil :font "Berkeley Mono" :height 110 :width 'regular)
+(set-face-attribute 'fixed-pitch nil :font "Berkeley Mono" :height 105 :width 'regular)
 
 ;; Italicize comments
 (set-face-attribute 'font-lock-comment-face nil :slant 'italic) ;; Italicize keywords
 (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
 
 ;; Set font on graphical frames
-(add-to-list 'default-frame-alist '(font . "Berkeley Mono 12"))
+(add-to-list 'default-frame-alist '(font . "Berkeley Mono 11"))
 
 (use-package all-the-icons
   :ensure t
@@ -280,6 +289,21 @@
 	      '(read-only t cursor-intangible t face minibuffer-prompt))
 	(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
+(defvar +vertico-current-arrow t)
+
+(cl-defmethod vertico--format-candidate :around
+  (cand prefix suffix index start &context ((and +vertico-current-arrow
+                                                 (not (bound-and-true-p vertico-flat-mode)))
+                                            (eql t)))
+  (setq cand (cl-call-next-method cand prefix suffix index start))
+  (if (bound-and-true-p vertico-grid-mode)
+      (if (= vertico--index index)
+          (concat #("=>" 0 1 (face vertico-current)) cand)
+        (concat #("_" 0 1 (display " ")) cand))
+    (if (= vertico--index index)
+        (concat #(" " 0 1 (display (left-fringe right-triangle vertico-current))) cand)
+      cand)))
+
 (use-package vertico-prescient
   :after vertico
   :init
@@ -313,6 +337,3 @@
 (defun jah/reload-init-file ()
   (interactive)
   (load-file user-init-file))
-
-(setq custom-file (expand-file-name "customs.el" user-emacs-directory))
-(add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))

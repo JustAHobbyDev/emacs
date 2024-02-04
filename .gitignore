@@ -1,3 +1,4 @@
+**/*.bak*
 *~
 \#*\#
 #.elc
@@ -18,3 +19,7 @@ url
 projects
 multisession/
 transient/
+image-dired/
+tutorial/
+var/
+etc/

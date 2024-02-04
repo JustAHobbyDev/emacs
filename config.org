@@ -3,11 +3,19 @@
 #+DESCRIPTION: Dan's personal Emacs config
 #+OPTIONS: toc:2
 
-* Table of Contents :toc:
+* Table of Contents :toc_3_gh:
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
+  - [[#disable-packagelel][Disable packagel.el]]
   - [[#elpaca---package-manager][Elpaca - Package Manager]]
   - [[#elpaca-use-package-support][Elpaca use-package support]]
   - [[#meow-mode][Meow Mode]]
+    - [[#qwerty-layout][Qwerty Layout]]
+    - [[#meow][meow]]
+- [[#no-littering][NO LITTERING!!!]]
+  - [[#install--use-package][Install & Use Package]]
+  - [[#configure-recentf][Configure recentf]]
+  - [[#customel][Custom.el]]
+  - [[#native-compilation-cache][Native compilation cache]]
 - [[#keybinds][Keybinds]]
   - [[#info][Info]]
 - [[#windows][Windows]]
@@ -16,6 +24,8 @@
   - [[#theme][Theme]]
   - [[#fonts][Fonts]]
   - [[#icons][Icons]]
+    - [[#all-the-icons][all-the-icons]]
+    - [[#all-the-icons-nerd-fonts][all-the-icons-nerd-fonts]]
 - [[#gui-tweaks][GUI Tweaks]]
   - [[#pixel-scrolling][Pixel Scrolling]]
   - [[#disable-menu-bar-tool-bar-and-scroll-bars][Disable menu bar, tool bar, and scroll bars]]
@@ -31,15 +41,23 @@
   - [[#source-code-block-expansion][Source Code Block Expansion]]
 - [[#vertico][Vertico]]
   - [[#vertico-1][vertico]]
-  - [[#vertico-prescient][vertico-prescient]]
+    - [[#prefix-current-candidate-with-arrow][Prefix current candidate with arrow]]
+  - [[#replace-vertico-prescient-with-orderless][replace vertico-prescient with orderless]]
+    - [[#vertico-prescient][vertico-prescient]]
 - [[#sudo-edit][SUDO EDIT]]
 - [[#which-key][WHICH-KEY]]
   - [[#configuration][Configuration]]
 - [[#finale][FINALE]]
   - [[#reload-config][Reload Config]]
-  - [[#customel][Custom.el]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
+** Disable packagel.el
+You'll also want to disable package.el in your early-init file.
+
+#+begin_src emacs-lisp :tangle "early-init.el" :comments both
+  (setq package-enable-at-startup nil)
+#+end_src 
+
 ** Elpaca - Package Manager
 
 #+begin_src emacs-lisp
@@ -206,6 +224,40 @@
     (meow-global-mode 1))
 #+end_src
 
+* NO LITTERING!!!
+** Install & Use Package
+#+begin_src emacs-lisp
+  (use-package no-littering)
+#+end_src
+
+** Configure recentf
+Exclude *no-littering* directories from `recentf'.
+#+begin_src emacs-lisp
+  (with-eval-after-load 'recentf 
+    (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-var-directory))
+    (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory)))
+#+end_src
+
+** Custom.el
+Tell Emacs where to write customizations.
+#+begin_src emacs-lisp
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+#+end_src
+
+** Native compilation cache
+
+When using Emacs 29, the location of the native compilation cache can
+be changed using a function, preferably in ~early-init.el~:
+
+#+begin_src emacs-lisp :tangle "early-init.el" :comments both
+  (when (fboundp 'startup-redirect-eln-cache)
+    (startup-redirect-eln-cache
+     (convert-standard-filename
+      (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+#+end_src
+
+
 * Keybinds
 ** Info
 #+begin_src emacs-lisp
@@ -258,16 +310,16 @@
 ** Fonts
 #+begin_src emacs-lisp
   ;; Set fonts
-  (set-face-attribute 'default nil :font "Berkeley Mono" :height 110 :width 'regular)
+  (set-face-attribute 'default nil :font "Berkeley Mono" :height 105 :width 'regular)
   (set-face-attribute 'variable-pitch nil :font "Berkeley Mono Variable" :height 120 :width 'regular)
-  (set-face-attribute 'fixed-pitch nil :font "Berkeley Mono" :height 110 :width 'regular)
+  (set-face-attribute 'fixed-pitch nil :font "Berkeley Mono" :height 105 :width 'regular)
 
   ;; Italicize comments
   (set-face-attribute 'font-lock-comment-face nil :slant 'italic) ;; Italicize keywords
   (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
 
   ;; Set font on graphical frames
-  (add-to-list 'default-frame-alist '(font . "Berkeley Mono 12"))
+  (add-to-list 'default-frame-alist '(font . "Berkeley Mono 11"))
 #+end_src
 
 
@@ -290,7 +342,6 @@
     :config
     (all-the-icons-nerd-fonts-prefer))
 #+end_src
-
 
 * GUI Tweaks
 ** Pixel Scrolling
@@ -368,7 +419,7 @@
     :init (add-hook 'org-mode-hook 'toc-org-enable))
 #+end_src
 
-** Enabling Org Bullets
+** Enabling Org Bullets 
 Org-bullets replaces asterisks(*) with bullets
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'org-indent-mode)
@@ -427,7 +478,27 @@ A few useful configurations for vertico
 	  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 #+end_src
 
-** vertico-prescient
+*** Prefix current candidate with arrow
+#+begin_src emacs-lisp
+  (defvar +vertico-current-arrow t)
+
+  (cl-defmethod vertico--format-candidate :around
+    (cand prefix suffix index start &context ((and +vertico-current-arrow
+                                                   (not (bound-and-true-p vertico-flat-mode)))
+                                              (eql t)))
+    (setq cand (cl-call-next-method cand prefix suffix index start))
+    (if (bound-and-true-p vertico-grid-mode)
+        (if (= vertico--index index)
+            (concat #("=>" 0 1 (face vertico-current)) cand)
+          (concat #("_" 0 1 (display " ")) cand))
+      (if (= vertico--index index)
+          (concat #(" " 0 1 (display (left-fringe right-triangle vertico-current))) cand)
+        cand)))
+
+#+end_src
+
+** TODO replace vertico-prescient with orderless
+*** vertico-prescient
 #+begin_src emacs-lisp
   (use-package vertico-prescient
     :after vertico
@@ -477,9 +548,4 @@ hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all 
   (defun jah/reload-init-file ()
     (interactive)
     (load-file user-init-file))
-#+end_src
-** Custom.el
-#+begin_src emacs-lisp
-  (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
-  (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 #+end_src
