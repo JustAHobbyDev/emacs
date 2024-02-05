@@ -148,11 +148,16 @@
   (meow-setup)
   (meow-global-mode 1))
 
-(use-package no-littering)
+(use-package no-littering
+  :config
+  (no-littering-theme-backups))
 
 (with-eval-after-load 'recentf 
   (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-var-directory))
   (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory)))
+
+(with-eval-after-load 'no-littering
+      (no-littering-theme-backups))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))

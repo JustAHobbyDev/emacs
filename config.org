@@ -14,6 +14,7 @@
 - [[#no-littering][NO LITTERING!!!]]
   - [[#install--use-package][Install & Use Package]]
   - [[#configure-recentf][Configure recentf]]
+  - [[#put-file-backups-in-no-littering-var-directory][Put file backups in `no-littering-var-directory']]
   - [[#customel][Custom.el]]
   - [[#native-compilation-cache][Native compilation cache]]
 - [[#keybinds][Keybinds]]
@@ -227,7 +228,9 @@ You'll also want to disable package.el in your early-init file.
 * NO LITTERING!!!
 ** Install & Use Package
 #+begin_src emacs-lisp
-  (use-package no-littering)
+  (use-package no-littering
+    :config
+    (no-littering-theme-backups))
 #+end_src
 
 ** Configure recentf
@@ -238,6 +241,17 @@ Exclude *no-littering* directories from `recentf'.
     (add-to-list 'recentf-exclude (recentf-expand-file-name no-littering-etc-directory)))
 #+end_src
 
+** Put file backups in `no-littering-var-directory'
+Additional files are created in the same directory as the visited
+file, for files located in:
+- "/tmp/"
+- "/dev/shm"
+- temporary-file-directory
+  #+begin_src emacs-lisp
+    (with-eval-after-load 'no-littering
+          (no-littering-theme-backups))
+  #+end_src
+  
 ** Custom.el
 Tell Emacs where to write customizations.
 #+begin_src emacs-lisp
