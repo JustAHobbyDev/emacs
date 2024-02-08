@@ -222,7 +222,8 @@ You'll also want to disable package.el in your early-init file.
   (use-package meow
     :config
     (meow-setup)
-    (meow-global-mode 1))
+    ;; Turned off meow-mode
+    (meow-global-mode 0))
 #+end_src
 
 * NO LITTERING!!!

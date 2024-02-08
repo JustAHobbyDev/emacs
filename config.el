@@ -146,7 +146,7 @@
 (use-package meow
   :config
   (meow-setup)
-  (meow-global-mode 1))
+  (meow-global-mode 0))
 
 (use-package no-littering
   :config
