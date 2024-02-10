@@ -3,7 +3,8 @@
 #+DESCRIPTION: Dan's personal Emacs config
 #+OPTIONS: toc:2
 
-* Table of Contents :toc_3_gh:
+
+* TABLE OF CONTENTS                                                :TOC_3:
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
   - [[#disable-packagelel][Disable packagel.el]]
   - [[#elpaca---package-manager][Elpaca - Package Manager]]
@@ -50,6 +51,11 @@
   - [[#magit-1][Magit]]
 - [[#which-key][WHICH-KEY]]
   - [[#configuration][Configuration]]
+- [[#dired][DIRED]]
+  - [[#dired-1][DIRED+]]
+  - [[#dired-quicksort][DIRED QUICKSORT]]
+  - [[#dired-hacks-utils][DIRED-HACKS-UTILS]]
+  - [[#dired-hide-dotfile][DIRED-HIDE-DOTFILE]]
 - [[#finale][FINALE]]
   - [[#reload-config][Reload Config]]
 
@@ -703,8 +709,13 @@ Git Interface -  [[https:github.com/magit/magit][github]]
           which-key-max-description-length 40
           which-key-allow-imprecise-window-fit t
           which-key-separator " -> "))
-
 #+end_src
+
+* TODO DIRED
+** TODO DIRED+
+** TODO DIRED QUICKSORT
+** TODO DIRED-HACKS-UTILS
+** TODO DIRED-HIDE-DOTFILE
 
 * FINALE
 Any configuration which relies on after-init-hook, emacs-startup-hook, etc should be
