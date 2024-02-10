@@ -158,6 +158,10 @@
   ;; already links to the manual, if a function is referenced there.
   (global-set-key (kbd "C-h F") #'helpful-function))
 
+(keymap-global-set "C-c l" 'org-store-link)
+(keymap-global-set "C-c a" 'org-agenda)
+(keymap-global-set "C-c c" 'org-capture)
+
 (use-package toc-org
   :commands toc-org-enable
   :init (add-hook 'org-mode-hook 'toc-org-enable))
@@ -440,3 +444,26 @@
   ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
   ;;(add-to-list 'completion-at-point-functions #'cape-line)
 )
+
+(use-package magit :ensure t)
+
+(use-package which-key
+  :init
+    (which-key-mode 1)
+  :config
+  (setq which-key-side-window-location 'bottom
+        which-key-sort-order #'which-key-key-order-alpha
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
+        which-key-max-display-columns nil
+        which-key-min-display-lines 6
+        which-key-side-window-slot -10
+        which-key-side-window-max-height 0.25
+        which-key-idle-delay 0.8
+        which-key-max-description-length 40
+        which-key-allow-imprecise-window-fit t
+        which-key-separator " -> "))
+
+(defun jah/reload-init-file ()
+  (interactive)
+  (load-file user-init-file))

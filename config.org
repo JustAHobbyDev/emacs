@@ -33,6 +33,7 @@
 - [[#help--info][Help & Info]]
   - [[#use-helpful][Use Helpful]]
 - [[#org-mode][ORG MODE]]
+  - [[#set-global-keybinds-for-org][Set Global Keybinds for Org]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#disable-electric-indent][Disable Electric Indent]]
@@ -47,6 +48,10 @@
   - [[#cape][Cape]]
 - [[#magit][MAGIT]]
   - [[#magit-1][Magit]]
+- [[#which-key][WHICH-KEY]]
+  - [[#configuration][Configuration]]
+- [[#finale][FINALE]]
+  - [[#reload-config][Reload Config]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -327,6 +332,13 @@ be changed using a function, preferably in ~early-init.el~:
 
 
 * ORG MODE
+** Set Global Keybinds for Org
+#+begin_src emacs-lisp
+  (keymap-global-set "C-c l" 'org-store-link)
+  (keymap-global-set "C-c a" 'org-agenda)
+  (keymap-global-set "C-c c" 'org-capture)
+#+end_src
+
 ** Enabling Table of Contents
 #+begin_src emacs-lisp
   (use-package toc-org
@@ -670,4 +682,36 @@ Git Interface -  [[https:github.com/magit/magit][github]]
 
 #+begin_src emacs-lisp
 (use-package magit :ensure t)
+#+end_src
+
+* WHICH-KEY
+** Configuration
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init
+      (which-key-mode 1)
+    :config
+    (setq which-key-side-window-location 'bottom
+          which-key-sort-order #'which-key-key-order-alpha
+          which-key-sort-uppercase-first nil
+          which-key-add-column-padding 1
+          which-key-max-display-columns nil
+          which-key-min-display-lines 6
+          which-key-side-window-slot -10
+          which-key-side-window-max-height 0.25
+          which-key-idle-delay 0.8
+          which-key-max-description-length 40
+          which-key-allow-imprecise-window-fit t
+          which-key-separator " -> "))
+
+#+end_src
+
+* FINALE
+Any configuration which relies on after-init-hook, emacs-startup-hook, etc should be
+hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all queued packages.
+** Reload Config
+#+begin_src emacs-lisp
+  (defun jah/reload-init-file ()
+    (interactive)
+    (load-file user-init-file))
 #+end_src
