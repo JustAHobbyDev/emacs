@@ -1,7 +1,6 @@
-#+TITLE: Dan's GNU Emacs Config
+sd#+TITLE: Dan's GNU Emacs Config
 #+AUTHOR: Dan Schmidt
 #+DESCRIPTION: Dan's personal Emacs config
-#+OPTIONS: toc:2
 
 
 * TABLE OF CONTENTS                                                :TOC_3:
@@ -22,6 +21,8 @@
 - [[#looks][LOOKS]]
   - [[#fonts][Fonts]]
   - [[#theme][Theme]]
+    - [[#modus-theme-settings][Modus Theme Settings]]
+  - [[#use-naysayer-theme][Use naysayer theme]]
   - [[#icons][Icons]]
     - [[#all-the-icons][all-the-icons]]
     - [[#all-the-icons-nerd-fonts][all-the-icons-nerd-fonts]]
@@ -51,11 +52,13 @@
   - [[#magit-1][Magit]]
 - [[#which-key][WHICH-KEY]]
   - [[#configuration][Configuration]]
+- [[#pdf-tools][PDF-TOOLS]]
 - [[#dired][DIRED]]
   - [[#dired-1][DIRED+]]
   - [[#dired-quicksort][DIRED QUICKSORT]]
   - [[#dired-hacks-utils][DIRED-HACKS-UTILS]]
   - [[#dired-hide-dotfile][DIRED-HIDE-DOTFILE]]
+  - [[#dired-config][DIRED CONFIG]]
 - [[#finale][FINALE]]
   - [[#reload-config][Reload Config]]
 
@@ -221,6 +224,7 @@ be changed using a function, preferably in ~early-init.el~:
 #+end_src
 
 ** Theme
+*** Modus Theme Settings
 #+begin_src emacs-lisp
    ;; modus-vivendi theme customizations
    (setq modus-themes-mode-line
@@ -240,9 +244,19 @@ be changed using a function, preferably in ~early-init.el~:
 		   (selection . (semibold accented intense)) ;; current line or matched candidate
 		   (popup . (accented)) ;; anciliary popups
 		   )))
+#+end_src
 
+** Use naysayer theme
+#+begin_src emacs-lisp
+  (use-package naysayer-theme
+    :config
+       (load-theme 'naysayer t))
+#+end_src
+
+Modus theme code
+#+begin_src emacs-lisp
    ;; Load a color theme
-   (load-theme 'modus-vivendi t)
+   ;; (load-theme 'modus-vivendi t)
 #+end_src
 
 ** Icons
@@ -376,6 +390,7 @@ Org-bullets replaces asterisks(*) with bullets
 Enable vertico
 #+begin_src emacs-lisp
   (use-package vertico
+    :defer t
     :init
     (vertico-mode)
     (setq vertico-scroll-margin 0) ;; Different scroll margin
@@ -439,6 +454,7 @@ A few useful configurations for vertico
 Provides an `orderless' /completion style/.
 #+begin_src emacs-lisp
   (use-package orderless
+    :defer t
     :ensure t
     :custom
     (completion-styles '(orderless basic))
@@ -463,6 +479,7 @@ Since we are using Orderless, let's restrict the set of candidates to those curr
 Rich annotations in the mininbuffer
 #+begin_src emacs-lisp
 (use-package marginalia
+:defer t
 :bind (:map minibuffer-local-map
 ("M-A" . marginalia-cycle))
 :init
@@ -472,6 +489,7 @@ Rich annotations in the mininbuffer
 * CONSULT (Search and Navigation)
 #+begin_src emacs-lisp
   (use-package consult
+    :defer t
     :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
@@ -590,6 +608,7 @@ Rich annotations in the mininbuffer
 
 #+end_src
 
+
 * Corfu (Completion at Point)
 ** Corfu
  [[https:www.github.com/minad/corfu][minad/corfu]]
@@ -643,6 +662,7 @@ Depends on Corfu
 #+begin_src emacs-lisp
 ;; Add extensions
 (use-package cape
+  :defer t
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
   :bind (("C-c p p" . completion-at-point) ;; capf
@@ -687,7 +707,9 @@ Depends on Corfu
 Git Interface -  [[https:github.com/magit/magit][github]]
 
 #+begin_src emacs-lisp
-(use-package magit :ensure t)
+(use-package magit 
+:ensure t
+:defer t)
 #+end_src
 
 * WHICH-KEY
@@ -711,11 +733,35 @@ Git Interface -  [[https:github.com/magit/magit][github]]
           which-key-separator " -> "))
 #+end_src
 
+
+* PDF-TOOLS
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+  :init
+  (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
+  :config
+  (pdf-tools-install))
+#+end_src
+
+
 * TODO DIRED
 ** TODO DIRED+
 ** TODO DIRED QUICKSORT
 ** TODO DIRED-HACKS-UTILS
 ** TODO DIRED-HIDE-DOTFILE
+
+** DIRED CONFIG
+Custome set variables:
+#+begin_src emacs-lisp
+  (setq dired-clean-confirm-killing-deleted-buffers nil) ;; don't ask to kill buffers visiting deleted files
+  (setq dired-listing-switches "-alt")' ;; show hidden; long listing; sort by date
+  (setq dired-dwim-target t) ;; guess target destination
+  (setq dired-recursive-copies 'always) ;; copy recursively without asking
+  (setq dired-recursive-deletes 'always) ;; delete recursively without 
+  (setq dired-omit-files "\\.\\(#\\|\\.*$\\)")
+  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+#+end_src
+
 
 * FINALE
 Any configuration which relies on after-init-hook, emacs-startup-hook, etc should be

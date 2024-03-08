@@ -110,8 +110,12 @@
 		(popup . (accented)) ;; anciliary popups
 		)))
 
+(use-package naysayer-theme
+  :config
+     (load-theme 'naysayer t))
+
 ;; Load a color theme
-(load-theme 'modus-vivendi t)
+;; (load-theme 'modus-vivendi t)
 
 (use-package all-the-icons
   :ensure t
@@ -175,6 +179,7 @@
 (require 'org-tempo)
 
 (use-package vertico
+  :defer t
   :init
   (vertico-mode)
   (setq vertico-scroll-margin 0) ;; Different scroll margin
@@ -227,6 +232,7 @@
       cand)))
 
 (use-package orderless
+  :defer t
   :ensure t
   :custom
   (completion-styles '(orderless basic))
@@ -243,12 +249,14 @@
                          '(invisible t read-only t cursor-intangible t rear-nonsticky t))))
 
 (use-package marginalia
+:defer t
 :bind (:map minibuffer-local-map
 ("M-A" . marginalia-cycle))
 :init
 (marginalia-mode))
 
 (use-package consult
+  :defer t
   :bind (;; C-c bindings in `mode-specific-map'
        ("C-c M-x" . consult-mode-command)
        ("C-c h" . consult-history)
@@ -407,6 +415,7 @@
 
 ;; Add extensions
 (use-package cape
+  :defer t
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
   :bind (("C-c p p" . completion-at-point) ;; capf
@@ -445,7 +454,9 @@
   ;;(add-to-list 'completion-at-point-functions #'cape-line)
 )
 
-(use-package magit :ensure t)
+(use-package magit 
+:ensure t
+:defer t)
 
 (use-package which-key
   :init
@@ -463,6 +474,20 @@
         which-key-max-description-length 40
         which-key-allow-imprecise-window-fit t
         which-key-separator " -> "))
+
+(use-package pdf-tools
+:init
+(add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
+:config
+(pdf-tools-install))
+
+(setq dired-clean-confirm-killing-deleted-buffers nil) ;; don't ask to kill buffers visiting deleted files
+(setq dired-listing-switches "-alt")' ;; show hidden; long listing; sort by date
+(setq dired-dwim-target t) ;; guess target destination
+(setq dired-recursive-copies 'always) ;; copy recursively without asking
+(setq dired-recursive-deletes 'always) ;; delete recursively without 
+(setq dired-omit-files "\\.\\(#\\|\\.*$\\)")
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
 
 (defun jah/reload-init-file ()
   (interactive)
