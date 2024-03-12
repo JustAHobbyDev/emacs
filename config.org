@@ -1,4 +1,4 @@
-sd#+TITLE: Dan's GNU Emacs Config
+#+TITLE: Dan's GNU Emacs Config
 #+AUTHOR: Dan Schmidt
 #+DESCRIPTION: Dan's personal Emacs config
 
@@ -248,15 +248,15 @@ be changed using a function, preferably in ~early-init.el~:
 
 ** Use naysayer theme
 #+begin_src emacs-lisp
-  (use-package naysayer-theme
-    :config
-       (load-theme 'naysayer t))
-#+end_src
+  (use-package naysayer-theme	  
+    :config			  
+    (load-theme 'naysayer t)) 
+   #+end_src
 
 Modus theme code
 #+begin_src emacs-lisp
    ;; Load a color theme
-   ;; (load-theme 'modus-vivendi t)
+; (load-theme 'modus-vivendi t)
 #+end_src
 
 ** Icons
@@ -522,7 +522,7 @@ Rich annotations in the mininbuffer
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s d" . consult-fd)                  ;; Alternative: consult-find
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)

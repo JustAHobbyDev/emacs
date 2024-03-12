@@ -110,12 +110,12 @@
 		(popup . (accented)) ;; anciliary popups
 		)))
 
-(use-package naysayer-theme
-  :config
-     (load-theme 'naysayer t))
+(use-package naysayer-theme	  
+  :config			  
+  (load-theme 'naysayer t))
 
 ;; Load a color theme
-;; (load-theme 'modus-vivendi t)
+; (load-theme 'modus-vivendi t)
 
 (use-package all-the-icons
   :ensure t
@@ -289,7 +289,7 @@
        ("M-g i" . consult-imenu)
        ("M-g I" . consult-imenu-multi)
        ;; M-s bindings in `search-map'
-       ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+       ("M-s d" . consult-fd)                  ;; Alternative: consult-find
        ("M-s c" . consult-locate)
        ("M-s g" . consult-grep)
        ("M-s G" . consult-git-grep)
