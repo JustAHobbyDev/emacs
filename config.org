@@ -59,8 +59,9 @@
   - [[#dired-hacks-utils][DIRED-HACKS-UTILS]]
   - [[#dired-hide-dotfile][DIRED-HIDE-DOTFILE]]
   - [[#dired-config][DIRED CONFIG]]
-- [[#finale][FINALE]]
-  - [[#reload-config][Reload Config]]
+- [[#reload-config][RELOAD CONFIG]]
+  - [[#reload-config-1][Reload Config]]
+- [[#timers][TIMERS]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -763,7 +764,7 @@ Custome set variables:
 #+end_src
 
 
-* FINALE
+* RELOAD CONFIG
 Any configuration which relies on after-init-hook, emacs-startup-hook, etc should be
 hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all queued packages.
 ** Reload Config
@@ -771,4 +772,15 @@ hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all 
   (defun jah/reload-init-file ()
     (interactive)
     (load-file user-init-file))
+#+end_src
+
+
+* TIMERS 
+`view-timeers' is disabled by default.
+
+Let's enable it.
+#+begin_src emacs-lisp
+(put 'list-timers 'disabled nil)
+(view-timers)
+
 #+end_src
