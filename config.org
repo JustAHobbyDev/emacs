@@ -36,10 +36,15 @@
   - [[#use-helpful][Use Helpful]]
 - [[#org-mode][ORG MODE]]
   - [[#set-global-keybinds-for-org][Set Global Keybinds for Org]]
+  - [[#org-capture][ORG CAPTURE]]
+  - [[#agendas-config][AGENDAS CONFIG]]
+  - [[#todos-config][TODOS CONFIG]]
+  - [[#substitute-list-markers-with-center-dots][Substitute list markers with center dots]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#disable-electric-indent][Disable Electric Indent]]
   - [[#source-code-block-expansion][Source Code Block Expansion]]
+  - [[#hide-emphasis-markers][Hide emphasis markers]]
 - [[#vertico-minibuffer-completions][Vertico (Minibuffer Completions)]]
   - [[#vertico][Vertico]]
   - [[#orderless][Orderless]]
@@ -57,11 +62,15 @@
   - [[#dired-1][DIRED+]]
   - [[#dired-quicksort][DIRED QUICKSORT]]
   - [[#dired-hacks-utils][DIRED-HACKS-UTILS]]
-  - [[#dired-hide-dotfile][DIRED-HIDE-DOTFILE]]
   - [[#dired-config][DIRED CONFIG]]
 - [[#reload-config][RELOAD CONFIG]]
   - [[#reload-config-1][Reload Config]]
-- [[#timers][TIMERS]]
+- [[#treesitter][TREESITTER]]
+  - [[#treesit-auto][TREESIT-AUTO]]
+- [[#search][SEARCH]]
+  - [[#deadgrep][DEADGREP]]
+  - [[#wgrep-deadgrep][WGREP-DEADGREP]]
+  - [[#rgel][RG.EL]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -115,7 +124,6 @@ You'll also want to disable package.el in your early-init file.
 
 ** Elpaca use-package support
 #+begin_src emacs-lisp
-
   ;; Install a package via the elpaca macro
   ;; See the "recipes" section of the manual for more details.
 
@@ -360,6 +368,36 @@ Modus theme code
   (keymap-global-set "C-c c" 'org-capture)
 #+end_src
 
+** ORG CAPTURE
+#+begin_src emacs-lisp
+;; Put captured notes in their own directory
+(setq org-default-notes-files (concat org-directory "/notes.org"))
+#+end_src
+
+** AGENDAS CONFIG
+Tell Emacs where to search for org files
+#+begin_src emacs-lisp
+(setq org-agenda-files '(
+  "~/.config/emacs"
+  "~/Documents/org"
+))
+#+end_src
+
+** TODOS CONFIG
+#+begin_src emacs-lisp
+;; Store state change notes into drawer LOGBOOK
+(setq org-log-into-drawer t)
+
+;; Custom keywords
+(setq org-todo-keywords '((sequence "TODO(t)" "DONE(d!)")))
+#+end_src
+
+** Substitute list markers with center dots
+#+begin_src emacs-lisp
+(font-lock-add-keywords 'org-mode
+  '(("^ *\\([-]\\) " (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+#+end_src
+
 ** Enabling Table of Contents
 #+begin_src emacs-lisp
   (use-package toc-org
@@ -385,6 +423,10 @@ Org-bullets replaces asterisks(*) with bullets
   (require 'org-tempo)
 #+end_src
 
+** Hide emphasis markers 
+#+begin_src emacs-lisp
+(setq org-hide-emphasis-markers t)
+#+end_src
 
 * Vertico (Minibuffer Completions)
 ** Vertico
@@ -749,7 +791,6 @@ Git Interface -  [[https:github.com/magit/magit][github]]
 ** TODO DIRED+
 ** TODO DIRED QUICKSORT
 ** TODO DIRED-HACKS-UTILS
-** TODO DIRED-HIDE-DOTFILE
 
 ** DIRED CONFIG
 Custome set variables:
@@ -775,12 +816,49 @@ hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all 
 #+end_src
 
 
-* TIMERS 
+* COMMENT TIMERS 
 `view-timeers' is disabled by default.
 
 Let's enable it.
 #+begin_src emacs-lisp
-(put 'list-timers 'disabled nil)
-(view-timers)
+  (put 'list-timers 'disabled nil)
+  ;; (view-timers)
 
+#+end_src
+
+* TREESITTER
+
+** TREESIT-AUTO
+#+begin_src emacs-lisp
+(use-package treesit-auto
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+
+#+end_src
+
+* SEARCH
+
+** DEADGREP
+grep with ripgrep
+#+begin_src emacs-lisp
+(use-package deadgrep
+:bind (("<f5>" . #'deadgrep)))
+#+end_src
+
+** WGREP-DEADGREP
+Editable deadgrep buffers
+#+begin_src emacs-lisp
+(use-package wgrep-deadgrep
+:hook (deadgrep-finished-hook wgrep-deadgrep-setup))
+#+end_src
+
+** RG.EL
+General ripgrep utility
+#+begin_src emacs-lisp
+(use-package rg
+:init
+(rg-enable-default-bindings))
 #+end_src

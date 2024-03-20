@@ -166,6 +166,23 @@
 (keymap-global-set "C-c a" 'org-agenda)
 (keymap-global-set "C-c c" 'org-capture)
 
+;; Put captured notes in their own directory
+(setq org-default-notes-files (concat org-directory "/notes.org"))
+
+(setq org-agenda-files '(
+  "~/.config/emacs"
+  "~/Documents/org"
+))
+
+;; Store state change notes into drawer LOGBOOK
+(setq org-log-into-drawer t)
+
+;; Custom keywords
+(setq org-todo-keywords '((sequence "TODO(t)" "DONE(d!)")))
+
+(font-lock-add-keywords 'org-mode
+  '(("^ *\\([-]\\) " (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+
 (use-package toc-org
   :commands toc-org-enable
   :init (add-hook 'org-mode-hook 'toc-org-enable))
@@ -177,6 +194,8 @@
 (electric-indent-mode -1)
 
 (require 'org-tempo)
+
+(setq org-hide-emphasis-markers t)
 
 (use-package vertico
   :defer t
@@ -492,3 +511,20 @@
 (defun jah/reload-init-file ()
   (interactive)
   (load-file user-init-file))
+
+(use-package treesit-auto
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+
+(use-package deadgrep
+:bind (("<f5>" . #'deadgrep)))
+
+(use-package wgrep-deadgrep
+:hook (deadgrep-finished-hook wgrep-deadgrep-setup))
+
+(use-package rg
+:init
+(rg-enable-default-bindings))
