@@ -77,6 +77,9 @@
     (setq Info-isearch-search 1)
 ))
 
+;; Remap C-x C-b from list-buffers to ibuffer
+(global-set-key [remap list-buffers] 'ibuffer)
+
 (setq help-window-select t)
 
 ;; Set fonts

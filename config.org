@@ -16,6 +16,7 @@
   - [[#native-compilation-cache][Native compilation cache]]
 - [[#keybinds][Keybinds]]
   - [[#info][Info]]
+  - [[#ibuffer][iBuffer]]
 - [[#windows][Windows]]
   - [[#help][Help]]
 - [[#looks][LOOKS]]
@@ -196,6 +197,7 @@ be changed using a function, preferably in ~early-init.el~:
 
 
 * Keybinds
+
 ** Info
 #+begin_src emacs-lisp
 (add-hook 'Info-mode-hook
@@ -203,7 +205,13 @@ be changed using a function, preferably in ~early-init.el~:
     (local-set-key "z" #'Info-scroll-up)
     (setq Info-isearch-search 1)
 ))
+#+end_src
 
+
+** iBuffer
+#+begin_src emacs-lisp
+;; Remap C-x C-b from list-buffers to ibuffer
+(global-set-key [remap list-buffers] 'ibuffer)
 #+end_src
 
 
@@ -860,5 +868,9 @@ General ripgrep utility
 #+begin_src emacs-lisp
 (use-package rg
 :init
-(rg-enable-default-bindings))
+(rg-enable-default-bindings)
+:config
+(setq rg-finish-functions
+  (lambda (buf fin)
+    (switch-to-buffer-other-window buf))))
 #+end_src
