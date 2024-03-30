@@ -530,4 +530,51 @@
 
 (use-package rg
 :init
-(rg-enable-default-bindings))
+(rg-enable-default-bindings)
+:config
+(setq rg-finish-functions
+  (lambda (buf fin)
+    (switch-to-buffer-other-window buf))))
+
+(defun eshell-here ()
+  "Opens up a new shell in the directory associated with the
+current buffer's file. The eshell is renamed to match that
+directory to make multiple eshell windows easier."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name))
+                   default-directory))
+         (height (/ (window-total-height) 3))
+         (name   (car (last (split-string parent "/" t)))))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (eshell "new")
+    (rename-buffer (concat "*eshell: " name "*"))
+
+    (insert (concat "ls"))
+    (eshell-send-input)))
+
+(global-set-key (kbd "C-!") 'eshell-here)
+
+(defun eshell/x ()
+  (insert "exit")
+  (eshell-send-input)
+  (delete-window))
+
+(use-package eat
+:init
+(add-hook 'eshell-load-hook #'eat-eshell-mode)
+(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode))
+
+(defun dispatch-region ()
+  (interactive)
+  (thread-first
+    (mapcar (pcase-lambda (`(,beg . ,end))
+              (cons (create-marker beg)
+                    (create-marker end)))
+            (region-bounds))
+    (region-iterator)                   ;; produces sequential (beg . end) pairs
+    (dispatch-single-buffer)            ;; undo amalgamation, can handle multiple buffers
+    (dispatch-with-state current-state) ;; modal keybinding mode state
+    (pulse-on-record)                   ;; pulse region when recording the macro
+    (macro-dispatch)))
