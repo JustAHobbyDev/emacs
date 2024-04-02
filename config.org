@@ -77,6 +77,7 @@
 - [[#eat-emulate-a-terminal][EAT (Emulate A Terminal)]]
 - [[#etc][ETC]]
   - [[#dispatch-macro-in-region][dispatch macro in region]]
+  - [[#warnings][WARNINGS]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -137,10 +138,10 @@ You'll also want to disable package.el in your early-init file.
 
   ;; Install use-package support
   (elpaca elpaca-use-package
-    ;; Enable :elpaca use-package keyword.
+    ;; Enable :ensure use-package keyword.
     (elpaca-use-package-mode)
-    ;; Assume :elpaca t unless otherwise specified.
-    (setq elpaca-use-package-by-default t))
+    ;; Assume :ensure t unless otherwise specified.
+    (setq use-package-always-ensure t))
 
   ;; Block until current queue processed.
   (elpaca-wait)
@@ -468,7 +469,7 @@ Enable vertico
 A few useful configurations for vertico
 #+begin_src emacs-lisp
   (use-package emacs
-    :elpaca nil
+    :ensure nil
     :init
     ;; Add prompt indicator to `completing-read-multiple'.
     ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -698,7 +699,7 @@ Enhances in-buffer completion with a small completion suggestion popup.
 
 ;; A few more useful configurations...
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :init
   ;; TAB cycle if there are only few candidates
   (setq completion-cycle-threshold 3)
@@ -940,3 +941,8 @@ This works a lot better (and much faster) if you record a keyboard macro at the 
     (macro-dispatch)))
 #+end_src
  
+** WARNINGS
+Filter `Warning (elpaca): Unable to determine elpaca-core-date'
+#+begin_src emacs-lisp
+(setq warning-suppress-log-types '((elpaca :debug)))
+#+end_src

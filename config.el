@@ -42,10 +42,10 @@
 
 ;; Install use-package support
 (elpaca elpaca-use-package
-  ;; Enable :elpaca use-package keyword.
+  ;; Enable :ensure use-package keyword.
   (elpaca-use-package-mode)
-  ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+  ;; Assume :ensure t unless otherwise specified.
+  (setq use-package-always-ensure t))
 
 ;; Block until current queue processed.
 (elpaca-wait)
@@ -220,7 +220,7 @@
   (savehist-mode))
 
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -421,7 +421,7 @@
 
 ;; A few more useful configurations...
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :init
   ;; TAB cycle if there are only few candidates
   (setq completion-cycle-threshold 3)
@@ -578,3 +578,5 @@ directory to make multiple eshell windows easier."
     (dispatch-with-state current-state) ;; modal keybinding mode state
     (pulse-on-record)                   ;; pulse region when recording the macro
     (macro-dispatch)))
+
+(setq warning-suppress-log-types '((elpaca :debug)))
