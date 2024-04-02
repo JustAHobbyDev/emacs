@@ -1,4 +1,4 @@
-(defvar elpaca-installer-version 0.6)
+(defvar elpaca-installer-version 0.7)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -252,6 +252,8 @@
     (if (= vertico--index index)
         (concat #(" " 0 1 (display (left-fringe right-triangle vertico-current))) cand)
       cand)))
+
+(setq vertico-buffer-mode 1)
 
 (use-package orderless
   :defer t
@@ -578,5 +580,3 @@ directory to make multiple eshell windows easier."
     (dispatch-with-state current-state) ;; modal keybinding mode state
     (pulse-on-record)                   ;; pulse region when recording the macro
     (macro-dispatch)))
-
-(setq warning-suppress-log-types '((elpaca :debug)))
