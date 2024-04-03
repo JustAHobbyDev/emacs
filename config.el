@@ -80,6 +80,8 @@
 ;; Remap C-x C-b from list-buffers to ibuffer
 (global-set-key [remap list-buffers] 'ibuffer)
 
+(global-set-key (kbd "C-x C-.") #'find-file-at-point)
+
 (setq help-window-select t)
 
 ;; Set fonts
@@ -580,3 +582,8 @@ directory to make multiple eshell windows easier."
     (dispatch-with-state current-state) ;; modal keybinding mode state
     (pulse-on-record)                   ;; pulse region when recording the macro
     (macro-dispatch)))
+
+;; Might clash with C-' org-agenda command
+(use-package surround
+  :ensure t
+  :bind-keymap ("C-'" . surround-keymap))

@@ -17,6 +17,7 @@
 - [[#keybinds][Keybinds]]
   - [[#info][Info]]
   - [[#ibuffer][iBuffer]]
+  - [[#files][Files]]
 - [[#windows][Windows]]
   - [[#help][Help]]
 - [[#looks][LOOKS]]
@@ -77,6 +78,7 @@
 - [[#eat-emulate-a-terminal][EAT (Emulate A Terminal)]]
 - [[#etc][ETC]]
   - [[#dispatch-macro-in-region][dispatch macro in region]]
+  - [[#surround][SURROUND]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -219,6 +221,10 @@ be changed using a function, preferably in ~early-init.el~:
 (global-set-key [remap list-buffers] 'ibuffer)
 #+end_src
 
+** Files
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-.") #'find-file-at-point)
+#+end_src
 
 * Windows
 ** Help
@@ -945,3 +951,11 @@ This works a lot better (and much faster) if you record a keyboard macro at the 
     (macro-dispatch)))
 #+end_src
  
+** SURROUND
+Surround, inspired by tpope's plugin for vim, allows easy editing of pairs
+#+begin_src emacs-lisp
+  ;; Might clash with C-' org-cycle-agenda-files command
+  (use-package surround
+    :ensure t
+    :bind-keymap ("C-'" . surround-keymap))
+#+end_src
