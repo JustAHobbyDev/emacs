@@ -47,6 +47,7 @@
   - [[#disable-electric-indent][Disable Electric Indent]]
   - [[#source-code-block-expansion][Source Code Block Expansion]]
   - [[#hide-emphasis-markers][Hide emphasis markers]]
+  - [[#org-roam][Org-Roam]]
 - [[#vertico-minibuffer-completions][Vertico (Minibuffer Completions)]]
   - [[#vertico][Vertico]]
   - [[#orderless][Orderless]]
@@ -156,7 +157,6 @@ You'll also want to disable package.el in your early-init file.
   ;;(elpaca-wait)
   #+end_src
   
-
 * NO LITTERING!!!
 ** Install & Use Package
 #+begin_src emacs-lisp
@@ -203,7 +203,6 @@ be changed using a function, preferably in ~early-init.el~:
       (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
 
-
 * Keybinds
 
 ** Info
@@ -214,7 +213,6 @@ be changed using a function, preferably in ~early-init.el~:
     (setq Info-isearch-search 1)
 ))
 #+end_src
-
 
 ** iBuffer
 #+begin_src emacs-lisp
@@ -255,31 +253,33 @@ be changed using a function, preferably in ~early-init.el~:
 ** Theme
 *** Modus Theme Settings
 #+begin_src emacs-lisp
-   ;; modus-vivendi theme customizations
-   (setq modus-themes-mode-line
-	 '(borderless
-	   accented
-	   padded
-	   ))
+  ;; modus-vivendi theme customizations
+    (setq modus-themes-mode-line
+        '(borderless
+          accented
+          padded
+          ))
 
-   (setq modus-themes-region
-	 '(bg-only
-	   ))
+  (setq modus-themes-region
+        '(bg-only
+          ))
 
-   ;; Check the manual for tweaking ‘bold’ and ‘italic’ faces: Info
-   ;; node ‘(modus-themes) Configure bold and italic faces’.
-   (setq modus-themes-completions
-	   (quote ((matches . (extrabold background intense)) ;; matched user input
-		   (selection . (semibold accented intense)) ;; current line or matched candidate
-		   (popup . (accented)) ;; anciliary popups
-		   )))
+  ;; Check the manual for tweaking ‘bold’ and ‘italic’ faces: Info
+  ;; node ‘(modus-themes) Configure bold and italic faces’.
+  (setq modus-themes-completions
+          (quote ((matches . (extrabold background intense)) ;; matched user input
+                  (selection . (semibold accented intense)) ;; current line or matched candidate
+                  (popup . (accented)) ;; anciliary popups
+                  )))
 #+end_src
 
 ** Use naysayer theme
 #+begin_src emacs-lisp
+  (make-symbol "use-naysayer-theme")
+(if (boundp 'use-naysayer-theme)
   (use-package naysayer-theme	  
     :config			  
-    (load-theme 'naysayer t)) 
+    (load-theme 'naysayer t)))
    #+end_src
 
 Modus theme code
@@ -308,7 +308,6 @@ Modus theme code
     :config
     (all-the-icons-nerd-fonts-prefer))
 #+end_src
-
 
 * GUI Tweaks
 ** Pixel Scrolling
@@ -350,7 +349,6 @@ Modus theme code
   (line-number-mode -1)
 #+end_src
 
-
 * Help & Info
 ** Use Helpful
 *Helpful* is an alternative to the built-in Emacs /help/ that provides much more contextual information.
@@ -378,7 +376,6 @@ Modus theme code
     (global-set-key (kbd "C-h F") #'helpful-function))
 
 #+end_src
-
 
 * ORG MODE
 ** Set Global Keybinds for Org
@@ -448,6 +445,10 @@ Org-bullets replaces asterisks(*) with bullets
 (setq org-hide-emphasis-markers t)
 #+end_src
 
+** Org-Roam
+#+begin_src emacs-lisp
+(use-package org-roam)
+#+end_src
 * Vertico (Minibuffer Completions)
 ** Vertico
 Enable vertico
@@ -676,7 +677,6 @@ Rich annotations in the mininbuffer
 
 #+end_src
 
-
 * Corfu (Completion at Point)
 ** Corfu
  [[https:www.github.com/minad/corfu][minad/corfu]]
@@ -801,7 +801,6 @@ Git Interface -  [[https:github.com/magit/magit][github]]
           which-key-separator " -> "))
 #+end_src
 
-
 * PDF-TOOLS
 #+begin_src emacs-lisp
   (use-package pdf-tools
@@ -810,7 +809,6 @@ Git Interface -  [[https:github.com/magit/magit][github]]
   :config
   (pdf-tools-install))
 #+end_src
-
 
 * TODO DIRED
 ** TODO DIRED+
@@ -829,7 +827,6 @@ Custome set variables:
   (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
 #+end_src
 
-
 * RELOAD CONFIG
 Any configuration which relies on after-init-hook, emacs-startup-hook, etc should be
 hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all queued packages.
@@ -839,7 +836,6 @@ hooked to elpaca-after-init-hook so that it runs after Elpaca has activated all 
     (interactive)
     (load-file user-init-file))
 #+end_src
-
 
 * COMMENT TIMERS 
 `view-timeers' is disabled by default.

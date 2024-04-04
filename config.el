@@ -97,27 +97,29 @@
 (add-to-list 'default-frame-alist '(font . "Berkeley Mono 11"))
 
 ;; modus-vivendi theme customizations
-(setq modus-themes-mode-line
+  (setq modus-themes-mode-line
       '(borderless
-	accented
-	padded
-	))
+        accented
+        padded
+        ))
 
 (setq modus-themes-region
       '(bg-only
-	))
+        ))
 
 ;; Check the manual for tweaking ‘bold’ and ‘italic’ faces: Info
 ;; node ‘(modus-themes) Configure bold and italic faces’.
 (setq modus-themes-completions
-	(quote ((matches . (extrabold background intense)) ;; matched user input
-		(selection . (semibold accented intense)) ;; current line or matched candidate
-		(popup . (accented)) ;; anciliary popups
-		)))
+        (quote ((matches . (extrabold background intense)) ;; matched user input
+                (selection . (semibold accented intense)) ;; current line or matched candidate
+                (popup . (accented)) ;; anciliary popups
+                )))
 
-(use-package naysayer-theme	  
-  :config			  
-  (load-theme 'naysayer t))
+(make-symbol "use-naysayer-theme")
+(if (boundp 'use-naysayer-theme)
+  (use-package naysayer-theme	  
+    :config			  
+    (load-theme 'naysayer t)))
 
 ;; Load a color theme
 ; (load-theme 'modus-vivendi t)
@@ -201,6 +203,8 @@
 (require 'org-tempo)
 
 (setq org-hide-emphasis-markers t)
+
+(use-package org-roam)
 
 (use-package vertico
   :defer t
