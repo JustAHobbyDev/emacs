@@ -583,7 +583,18 @@ directory to make multiple eshell windows easier."
     (pulse-on-record)                   ;; pulse region when recording the macro
     (macro-dispatch)))
 
-;; Might clash with C-' org-agenda command
+;; Might clash with C-' org-cycle-agenda-files command
 (use-package surround
   :ensure t
   :bind-keymap ("C-'" . surround-keymap))
+
+;; User level paths I want added to my Emacs environment PATH
+(setq jah/paths '(
+  "/home/jah/.pyenv/plugins/pyenv-virtualenv/shims"
+  "/home/jah/.pyenv/bin"
+  "/home/jah/.pyenv/shims"
+  "/home/jah/.cargo/bin"
+  "/home/jah/.local/bin"
+))
+
+(setq exec-path (delete-dups (append jah/paths exec-path)))

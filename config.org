@@ -79,6 +79,7 @@
 - [[#etc][ETC]]
   - [[#dispatch-macro-in-region][dispatch macro in region]]
   - [[#surround][SURROUND]]
+  - [[#environment][Environment]]
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Disable packagel.el
@@ -959,3 +960,19 @@ Surround, inspired by tpope's plugin for vim, allows easy editing of pairs
     :ensure t
     :bind-keymap ("C-'" . surround-keymap))
 #+end_src
+
+** Environment
+Basic PATH setup. I would like to have an auto-generated version of this based on the contents of envman.
+#+begin_src emacs-lisp
+  ;; User level paths I want added to my Emacs environment PATH
+  (setq jah/paths '(
+    "/home/jah/.pyenv/plugins/pyenv-virtualenv/shims"
+    "/home/jah/.pyenv/bin"
+    "/home/jah/.pyenv/shims"
+    "/home/jah/.cargo/bin"
+    "/home/jah/.local/bin"
+  ))
+
+  (setq exec-path (delete-dups (append jah/paths exec-path)))
+#+end_src
+
