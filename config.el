@@ -204,7 +204,14 @@
 
 (setq org-hide-emphasis-markers t)
 
-(use-package org-roam)
+(use-package org-roam
+:init
+(setq my-org-roam-directory "/home/jah/Documents/org-roam/")
+  (if (not (file-directory-p my-org-roam-directory))
+      (make-directory my-org-roam-directory))
+  (setq org-roam-directory my-org-roam-directory)
+  ;; sync the db on file changes
+  (org-roam-db-autosync-mode))
 
 (use-package vertico
   :defer t

@@ -446,9 +446,19 @@ Org-bullets replaces asterisks(*) with bullets
 #+end_src
 
 ** Org-Roam
+Set `org-roam-directory' to the location I want to store notes.
 #+begin_src emacs-lisp
-(use-package org-roam)
+  (use-package org-roam
+  :init
+  (setq my-org-roam-directory "/home/jah/Documents/org-roam/")
+    (if (not (file-directory-p my-org-roam-directory))
+        (make-directory my-org-roam-directory))
+    (setq org-roam-directory my-org-roam-directory)
+    ;; sync the db on file changes
+    (org-roam-db-autosync-mode))
 #+end_src
+
+To build the cache manually, run src_emacs-lisp[:exports code]{M-x org-roam-db-sync}
 * Vertico (Minibuffer Completions)
 ** Vertico
 Enable vertico
@@ -928,7 +938,7 @@ directory to make multiple eshell windows easier."
 
 * ETC
 ** dispatch macro in region
->I'd say multiple-cursors is pretty powerful but I don't see many emacs people use it.
+I'd say multiple-cursors is pretty powerful but I don't see many emacs people use it.
 This works a lot better (and much faster) if you record a keyboard macro at the first point and then have it run on all the rest. I wrote something that builds up an iterator for generalized regions (begin and end marker pairs) and adds it as advice to kmacro-loop-setup-function for the duration of a call to kmacro-call-macro so you can record a keyboard on the first region and have it automatically run on all the rest. It works with rectangular regions, isearch matches and consult location and grep commands for now. The command definitions more or less look like
 
 [[~/Downloads/dispatch.gif]]
